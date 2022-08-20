@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -21,11 +24,31 @@ public class Excel {
 		
 		Sheet s=w.getSheet("sheet1");
 		
-		Row r=s.getRow(3);
-		
-		Cell c =r.getCell(1);
-		
-		System.out.println(c);
+		for (int i = 0; i < s.getPhysicalNumberOfRows(); i++) {
+			Row r = s.getRow(i);
+			for (int j = 0; j < r.getPhysicalNumberOfCells(); j++) {
+				Cell cell = r.getCell(j);
+				int cellType = cell.getCellType();
+				if(cellType==1) {
+					String v = cell.getStringCellValue();
+					System.out.println(v);
+				}
+					else if(DateUtil.isCellDateFormatted(cell)){
+						Date d = cell.getDateCellValue();
+						SimpleDateFormat sim = new SimpleDateFormat("dd,MMM,yyyy");
+						String v = sim.format(d);
+						System.out.println(v);
+					}
+					else {
+						double d = cell.getNumericCellValue();
+						long l=(long)d;
+						String v = String.valueOf(l);
+						System.out.println(v);
+				}
+				
+			}
+			
+		}
 		
 		
 		
